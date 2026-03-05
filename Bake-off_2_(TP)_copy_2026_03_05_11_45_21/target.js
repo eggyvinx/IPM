@@ -24,9 +24,9 @@ class Target
   draw()
   {
     if (targets_corretos.includes(this.id)) {
-        fill(color(0, 0, 155)); // pinta de outra cor se certo
+        fill(color(155, 155, 155)); // pinta de outra cor se certo
     } else {
-        fill(color(155, 155, 155));    
+        fill(color(0, 0, 155));    
     }          
     circle(this.x, this.y, this.width);
     

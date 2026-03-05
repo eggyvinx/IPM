@@ -1,5 +1,6 @@
 - por letras a negrito -> Done
 - ordenar alfabeticamente -> Done
 - mudar a cor da opções selecionadas corretamente ->Done
+- hover mouse
 - criar cores diferentes para cada letra
 - adicionar som quando acerta / erra
