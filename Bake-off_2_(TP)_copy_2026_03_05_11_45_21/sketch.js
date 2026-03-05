@@ -32,6 +32,11 @@ let targets               = [];
 const GRID_ROWS           = 8;      // We divide our 80 targets in a 8x10 grid
 const GRID_COLUMNS        = 10;     // We divide our 80 targets in a 8x10 grid
 
+
+//lista de targets corretos
+let targets_corretos = [];
+
+
 // Ensures important data is loaded before the program starts
 function preload()
 {
@@ -160,8 +165,13 @@ function mousePressed()
       if (targets[i].clicked(mouseX, mouseY)) 
       {                
         // Checks if it was the correct target
-        if (targets[i].id === trials[current_trial] + 1) hits++;
+        if (targets[i].id === trials[current_trial] + 1){
+          hits++;
+          targets_corretos.push(targets[i].id); //adicionei
+        }
         else misses++;
+
+        
         
         current_trial++;              // Move on to the next trial/target
         break;

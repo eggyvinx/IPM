@@ -21,8 +21,11 @@ class Target
   // and its label
   draw()
   {
-    // Draw target
-    fill(color(155,155,155));                 
+    if (targets_corretos.includes(this.id)) {
+        fill(color(0, 255, 0)); //pinta de outra cor se certo
+    } else {
+        fill(color(155, 155, 155));    
+    }          
     circle(this.x, this.y, this.width);
     
     // Draw label
