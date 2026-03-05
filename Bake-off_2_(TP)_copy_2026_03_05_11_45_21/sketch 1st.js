@@ -76,6 +76,7 @@ function draw()
     textFont("Arial", 20); 
     fill(color(255,255,255)); 
     textAlign(CENTER); 
+    textStyle(NORMAL);
     text(legendas.getString(trials[current_trial],1), width/2, height - 20);
   }
 }

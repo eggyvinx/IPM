@@ -21,11 +21,14 @@ class Target
   // and its label
 draw()
 {
-  fill(155);
+
+  fill(12);
   circle(this.x, this.y, this.width);
 
   let first = this.label[0];
   let rest  = this.label.slice(1);
+  //rest = rest.replaceAll(" ", "\n");
+  rest = " " + rest;
 
   let big = 33;
   let normal = 21;
@@ -67,7 +70,7 @@ draw()
   text(first, this.x - rest_w/2, this.y);
 
   // resto
-  textStyle(NORMAL);
+  textStyle(BOLD);
   textSize(normal);
   fill(255);
   text(rest, this.x + textWidth(first)/2, this.y);
