@@ -225,7 +225,7 @@ function createTargets(target_size, horizontal_gap, vertical_gap)
   h_margin = horizontal_gap / (GRID_COLUMNS -1);
   v_margin = vertical_gap / (GRID_ROWS - 1);
   
-  // Set targets in a 8 x 10 grid
+  // Set targets in a 8 x 10
 
   let cidades = [];
 
@@ -235,25 +235,55 @@ function createTargets(target_size, horizontal_gap, vertical_gap)
 
   cidades.sort();
 
+  let grupos = {}; // { 'A': [cidades], 'B': [...] }
 
-  for (var r = 0; r < GRID_ROWS; r++)
-  {
-    for (var c = 0; c < GRID_COLUMNS; c++)
-    {
-      let target_x = 40 + (h_margin + target_size) * c + target_size/2;        // give it some space from the left
-      let target_y = 40 + (v_margin + target_size) * r + target_size/2;        // give it some space from the top
-      
-      // Find the appropriate label and ID for this target
-      let legendas_index = c + GRID_COLUMNS * r;
-      //let target_id = legendas.getNum(legendas_index, 0);  
-      //let target_label = legendas.getString(legendas_index, 1);
-      let target_label = cidades[legendas_index];
+  for (let i = 0; i < cidades.length; i++) {
+    let letra = cidades[i][0];
+    if (!grupos[letra]) grupos[letra] = [];
+    if (letra == 'G' || letra == 'Q' || letra == 'U' || letra == 'V' || letra == 'Y' || letra == 'Z')
+        grupos['D'].push(cidades[i]);
+    else if (letra == 'J') grupos['F'].push(cidades[i]);
+    else grupos[letra].push(cidades[i]);
+  }
+
+  let MAX_COLS = 3;
+  let MAX_ROWS = 3;
+  let bloco_largura = MAX_COLS * (target_size + h_margin);
+  let bloco_altura  = MAX_ROWS * (target_size + v_margin);
+
+  let ESPACO = 25;
+
+let bloco_x = 40;
+let bloco_y = 40;
+
+let bloco_index = 1;
+for (let letra in grupos) {
+  let cidades_do_bloco = grupos[letra];
+
+  if (letra == 'G' || letra == 'J') continue;
+
+  for (let i = 0; i < cidades_do_bloco.length; i++) {
+      let r = Math.floor(i / MAX_COLS); // linha dentro do bloco
+      let c = i % MAX_COLS;             // coluna dentro do bloco
+
+      let target_x = bloco_x + c * (target_size + h_margin) + target_size/2;
+      let target_y = bloco_y + r * (target_size + v_margin) + target_size/2;
+
+      let target_label = cidades_do_bloco[i];
       let target_id = getIdByCidade(target_label);
 
       let target = new Target(target_x, target_y, target_size, target_label, target_id);
       targets.push(target);
-    }  
   }
+
+  // posição do bloco na grade 3x3
+  let bloco_col = bloco_index % 4;
+  let bloco_row = Math.floor(bloco_index / 4);
+  bloco_x = 40 + bloco_col * (bloco_largura + 40);
+  bloco_y = 40 + bloco_row * (bloco_altura + 40);
+
+  bloco_index++;
+}
 }
 
 // Is invoked when the canvas is resized (e.g., when we go fullscreen)
@@ -273,7 +303,7 @@ function windowResized()
     let screen_width   = display.width * 2.54;             // screen width
     let screen_height  = display.height * 2.54;            // screen height
     let target_size    = 2;                              // sets the target size (will be converted to cm when passed to createTargets)
-    let horizontal_gap = screen_width - target_size * GRID_COLUMNS;// empty space in cm across the x-axis (based on 10 targets per row)
+    let horizontal_gap = screen_width - (target_size+0.7) * GRID_COLUMNS;// empty space in cm across the x-axis (based on 10 targets per row)
     let vertical_gap   = screen_height - target_size * GRID_ROWS;  // empty space in cm across the y-axis (based on 8 targets per column)
 
     // Creates and positions the UI targets according to the white space defined above (in cm!)
