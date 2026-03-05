@@ -6,7 +6,7 @@
 // p5.js reference: https://p5js.org/reference/
 
 // Database (CHANGE THESE!)
-const GROUP_NUMBER        = 1;     // Add your group number here as an integer (e.g., 2, 3)
+const GROUP_NUMBER        = 9;     // Add your group number here as an integer (e.g., 2, 3)
 const RECORD_TO_FIREBASE  = false;  // Set to 'true' to record user results to Firebase
 
 // Pixel density and setup variables (DO NOT CHANGE!)
@@ -159,8 +159,10 @@ function mousePressed()
       // Check if the user clicked over one of the targets
       if (targets[i].clicked(mouseX, mouseY)) 
       {                
+        print("targ id: " + targets[i].id + " trial id: " + trials[current_trial]);
+        print(targets[i].id == trials[current_trial] + 1);
         // Checks if it was the correct target
-        if (targets[i].id === trials[current_trial] + 1) hits++;
+        if (targets[i].id == trials[current_trial] + 1) hits++;
         else misses++;
         
         current_trial++;              // Move on to the next trial/target
@@ -206,6 +208,15 @@ function continueTest()
   draw_targets = true; 
 }
 
+function getIdByCidade(nome) {
+  for (let r = 0; r < legendas.getRowCount(); r++) {
+    if (legendas.getString(r, 1) === nome) {
+      return legendas.getString(r, 0); // coluna 0 = id
+    }
+  }
+  return null;
+}
+
 // Creates and positions the UI targets
 function createTargets(target_size, horizontal_gap, vertical_gap)
 {
@@ -215,6 +226,16 @@ function createTargets(target_size, horizontal_gap, vertical_gap)
   v_margin = vertical_gap / (GRID_ROWS - 1);
   
   // Set targets in a 8 x 10 grid
+
+  let cidades = [];
+
+  for (let r = 0; r < legendas.getRowCount(); r++) {
+    cidades.push(legendas.getString(r, 1)); // coluna 1 = cidade
+  }
+
+  cidades.sort();
+
+
   for (var r = 0; r < GRID_ROWS; r++)
   {
     for (var c = 0; c < GRID_COLUMNS; c++)
@@ -224,9 +245,11 @@ function createTargets(target_size, horizontal_gap, vertical_gap)
       
       // Find the appropriate label and ID for this target
       let legendas_index = c + GRID_COLUMNS * r;
-      let target_id = legendas.getNum(legendas_index, 0);  
-      let target_label = legendas.getString(legendas_index, 1);
-      
+      //let target_id = legendas.getNum(legendas_index, 0);  
+      //let target_label = legendas.getString(legendas_index, 1);
+      let target_label = cidades[legendas_index];
+      let target_id = getIdByCidade(target_label);
+
       let target = new Target(target_x, target_y, target_size, target_label, target_id);
       targets.push(target);
     }  
