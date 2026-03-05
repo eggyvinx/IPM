@@ -236,13 +236,24 @@ function createTargets(target_size, horizontal_gap, vertical_gap)
   cidades.sort();
 
   let grupos = {}; // { 'A': [cidades], 'B': [...] }
+  let j = 0;
 
   for (let i = 0; i < cidades.length; i++) {
     let letra = cidades[i][0];
     if (!grupos[letra]) grupos[letra] = [];
+
     if (letra == 'G' || letra == 'Q' || letra == 'U' || letra == 'V' || letra == 'Y' || letra == 'Z')
         grupos['D'].push(cidades[i]);
+
     else if (letra == 'J') grupos['F'].push(cidades[i]);
+
+    else if (letra == 'L') {
+      if (!j++) grupos['K'].push("");
+      grupos['K'].push(cidades[i]);
+    }
+
+
+
     else grupos[letra].push(cidades[i]);
   }
 
@@ -251,7 +262,6 @@ function createTargets(target_size, horizontal_gap, vertical_gap)
   let bloco_largura = MAX_COLS * (target_size + h_margin);
   let bloco_altura  = MAX_ROWS * (target_size + v_margin);
 
-  let ESPACO = 25;
 
 let bloco_x = 40;
 let bloco_y = 40;
@@ -260,14 +270,42 @@ let bloco_index = 1;
 for (let letra in grupos) {
   let cidades_do_bloco = grupos[letra];
 
-  if (letra == 'G' || letra == 'J') continue;
+  if (letra == 'G' || letra == 'J' || letra == 'L' || letra == 'Q' || letra == 'U' || letra == 'V' || letra == 'Y' || letra == 'Z') continue;
 
+  else if (letra == 'S') {
+    let max_col = 4;
+    for (let i = 0; i < cidades_do_bloco.length; i++) {
+      let row = Math.floor(i / max_col);
+      let col = i % max_col;
+
+      let target_x = bloco_x + col * (target_size + h_margin) + target_size/2;
+      let target_y = bloco_y + row * (target_size + v_margin) + target_size/2;
+
+      let target_label = cidades_do_bloco[i];
+      let target_id = getIdByCidade(target_label);
+
+      let target = new Target(target_x, target_y, target_size, target_label, target_id);
+      targets.push(target);
+
+    }
+  }
+
+  else {
   for (let i = 0; i < cidades_do_bloco.length; i++) {
+
+      if (letra == 'K' && i == 4) continue;
+
       let r = Math.floor(i / MAX_COLS); // linha dentro do bloco
       let c = i % MAX_COLS;             // coluna dentro do bloco
 
+      if (letra == 'P') r++;
+      else if (letra == 'N') r += 2;
+
       let target_x = bloco_x + c * (target_size + h_margin) + target_size/2;
       let target_y = bloco_y + r * (target_size + v_margin) + target_size/2;
+
+      if (letra == 'P' || letra == 'N') target_y += 20;
+      else if (letra == 'R') target_y -= 50;
 
       let target_label = cidades_do_bloco[i];
       let target_id = getIdByCidade(target_label);
@@ -275,12 +313,22 @@ for (let letra in grupos) {
       let target = new Target(target_x, target_y, target_size, target_label, target_id);
       targets.push(target);
   }
+  }
 
-  // posição do bloco na grade 3x3
+  if (letra == 'O' || letra == 'M') continue;
+
+  // posição do bloco na grade 4x4
+
+  if (letra == 'S') bloco_index++;
+
   let bloco_col = bloco_index % 4;
   let bloco_row = Math.floor(bloco_index / 4);
   bloco_x = 40 + bloco_col * (bloco_largura + 40);
   bloco_y = 40 + bloco_row * (bloco_altura + 40);
+
+  if (letra == 'R') bloco_x += 150
+  else if (letra == 'N') bloco_y -= 25;
+  else if (letra == 'S') bloco_y -= 20;
 
   bloco_index++;
 }
@@ -302,7 +350,7 @@ function windowResized()
     // Below we find out out white space we can have between 2 cm targets
     let screen_width   = display.width * 2.54;             // screen width
     let screen_height  = display.height * 2.54;            // screen height
-    let target_size    = 2;                              // sets the target size (will be converted to cm when passed to createTargets)
+    let target_size    = 2.1;                              // sets the target size (will be converted to cm when passed to createTargets)
     let horizontal_gap = screen_width - (target_size+0.7) * GRID_COLUMNS;// empty space in cm across the x-axis (based on 10 targets per row)
     let vertical_gap   = screen_height - target_size * GRID_ROWS;  // empty space in cm across the y-axis (based on 8 targets per column)
 
