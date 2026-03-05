@@ -1,5 +1,5 @@
-- por letras a negrito
-- ordenar alfabeticamente
-- mudar a cor da opções selecionadas corretamente
+- por letras a negrito -> Done
+- ordenar alfabeticamente -> Done
+- mudar a cor da opções selecionadas corretamente ->Done
 - criar cores diferentes para cada letra
 - adicionar som quando acerta / erra
