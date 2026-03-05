@@ -19,10 +19,12 @@ class Target
   
   // Draws the target (i.e., a circle)
   // and its label
+  // Draws the target (i.e., a circle)
+  // and its label
   draw()
   {
     if (targets_corretos.includes(this.id)) {
-        fill(color(0, 255, 0)); //pinta de outra cor se certo
+        fill(color(0, 0, 155)); // pinta de outra cor se certo
     } else {
         fill(color(155, 155, 155));    
     }          
@@ -30,8 +32,10 @@ class Target
     
     // Draw label
     textFont("Arial", 12);
-    fill(color(255,255,255));
+    textStyle(BOLD);      //mete letras a bold
+    fill(color(255, 255, 255));
     textAlign(CENTER);
     text(this.label, this.x, this.y);
+    
   }
 }

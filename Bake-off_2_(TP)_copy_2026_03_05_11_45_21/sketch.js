@@ -213,6 +213,9 @@ function continueTest()
   
   current_trial = 0;
   continue_button.remove();
+
+  //reinicia a ista de corretos
+  targets_corretos = [];
   
   // Shows the targets again
   draw_targets = true; 
