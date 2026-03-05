@@ -221,7 +221,7 @@ function continueTest()
 function getIdByCidade(nome) {
   for (let r = 0; r < legendas.getRowCount(); r++) {
     if (legendas.getString(r, 1) === nome) {
-      return legendas.getString(r, 0); // coluna 0 = id
+      return legendas.getNum(r, 0); // coluna 0 = id
     }
   }
   return null;
