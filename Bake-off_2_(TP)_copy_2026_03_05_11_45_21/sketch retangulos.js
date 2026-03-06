@@ -29,12 +29,17 @@ let attempt               = 0;      // users complete each test twice to account
 
 // Target list and layout variables
 let targets               = [];
-const GRID_ROWS           = 8;      // We divide our 80 targets in a 8x10 grid
-const GRID_COLUMNS        = 10;     // We divide our 80 targets in a 8x10 grid
+const GRID_ROWS           = 9;      // We divide our 80 targets in a 8x10 grid
+const GRID_COLUMNS        = 9;     // We divide our 80 targets in a 8x10 grid
+
+let correct_sound;
+let incorrect_sound;
 
 // Ensures important data is loaded before the program starts
 function preload()
 {
+  correct_sound = loadSound('correct_sound.mp3');
+  incorrect_sound = loadSound('incorrect_sound.mp3');
   // id,name,...
   const preamble = GROUP_NUMBER < 10 ? 'legendas/G_0' : 'legendas/G_';
   legendas = loadTable(preamble+GROUP_NUMBER+'.csv', 'csv', 'header');
@@ -53,6 +58,7 @@ function setup()
 // Runs every frame and redraws the screen
 function draw()
 {
+
   if (draw_targets && attempt < 2)
   {     
     // The user is interacting with the 6x3 target grid
@@ -67,6 +73,19 @@ function draw()
     // Draw all targets
 	for (var i = 0; i < legendas.getRowCount(); i++) targets[i].draw();
     
+    noFill();
+    strokeWeight(4);
+
+    stroke(255,0,0);
+    rect(320, 177, 1000, 68);
+
+    stroke(0,255,0);
+    rect(320, 255, 1000, 68);
+
+    stroke(0,0,255);
+    rect(320, 333, 1300, 68);
+
+    stroke(0);
     // Draws the target label to be selected in the current trial. We include 
     // a black rectangle behind the trial label for optimal contrast in case 
     // you change the background colour of the sketch (DO NOT CHANGE THESE!)
@@ -163,8 +182,14 @@ function mousePressed()
         print("targ id: " + targets[i].id + " trial id: " + trials[current_trial]);
         print(targets[i].id == trials[current_trial] + 1);
         // Checks if it was the correct target
-        if (targets[i].id == trials[current_trial] + 1) hits++;
-        else misses++;
+        if (targets[i].id == trials[current_trial] + 1) {
+          correct_sound.play();
+          hits++;
+        }
+        else {
+          incorrect_sound.play();
+          misses++;
+        }
         
         current_trial++;              // Move on to the next trial/target
         break;
@@ -212,7 +237,7 @@ function continueTest()
 function getIdByCidade(nome) {
   for (let r = 0; r < legendas.getRowCount(); r++) {
     if (legendas.getString(r, 1) === nome) {
-      return legendas.getString(r, 0); // coluna 0 = id
+      return legendas.getNum(r, 0); // coluna 0 = id
     }
   }
   return null;
@@ -223,10 +248,10 @@ function createTargets(target_size, horizontal_gap, vertical_gap)
 {
   // Define the margins between targets by dividing the white space 
   // for the number of targets minus one
-  h_margin = horizontal_gap / (GRID_COLUMNS -1);
+  h_margin = horizontal_gap / (GRID_COLUMNS - 1);
   v_margin = vertical_gap / (GRID_ROWS - 1);
   
-  // Set targets in a 8 x 10
+  // Set targets in a 8 x 10 grid
 
   let cidades = [];
 
@@ -236,103 +261,30 @@ function createTargets(target_size, horizontal_gap, vertical_gap)
 
   cidades.sort();
 
-  let grupos = {}; // { 'A': [cidades], 'B': [...] }
-  let j = 0;
+  let breaks = [7, 14, 31, 39, 47, 62, 70];
+  let row = 0;
+  let col = 0;
+  let len = cidades.length;
+  for (let i = 0; i < len; i++) {
 
-  for (let i = 0; i < cidades.length; i++) {
-    let letra = cidades[i][0];
-    if (!grupos[letra]) grupos[letra] = [];
-
-    if (letra == 'G' || letra == 'Q' || letra == 'U' || letra == 'V' || letra == 'Y' || letra == 'Z')
-        grupos['D'].push(cidades[i]);
-
-    else if (letra == 'J') grupos['F'].push(cidades[i]);
-
-    else if (letra == 'L') {
-      if (!j++) grupos['K'].push("");
-      grupos['K'].push(cidades[i]);
+    // força quebra nos índices definidos
+    if (breaks.includes(i) || col >= 9) {
+      row++;
+      col = 0;
     }
 
+    let target_x = 351 + (h_margin + target_size) * col + target_size/2;
+    let target_y = 180 + (v_margin + target_size + 30) * row + target_size/2;
 
+    if (i == 79) target_x += 574;
 
-    else grupos[letra].push(cidades[i]);
+    let target_label = cidades[i];
+    let target_id = getIdByCidade(target_label);
+
+    targets.push(new Target(target_x, target_y, target_size, target_label, target_id));
+
+    col++;
   }
-
-  let MAX_COLS = 3;
-  let MAX_ROWS = 3;
-  let bloco_largura = MAX_COLS * (target_size + h_margin);
-  let bloco_altura  = MAX_ROWS * (target_size + v_margin);
-
-
-let bloco_x = 40;
-let bloco_y = 40;
-
-let bloco_index = 1;
-for (let letra in grupos) {
-  let cidades_do_bloco = grupos[letra];
-
-  if (letra == 'G' || letra == 'J' || letra == 'L' || letra == 'Q' || letra == 'U' || letra == 'V' || letra == 'Y' || letra == 'Z') continue;
-
-  else if (letra == 'S') {
-    let max_col = 4;
-    for (let i = 0; i < cidades_do_bloco.length; i++) {
-      let row = Math.floor(i / max_col);
-      let col = i % max_col;
-
-      let target_x = bloco_x + col * (target_size + h_margin) + target_size/2;
-      let target_y = bloco_y + row * (target_size + v_margin) + target_size/2;
-
-      let target_label = cidades_do_bloco[i];
-      let target_id = getIdByCidade(target_label);
-
-      let target = new Target(target_x, target_y, target_size, target_label, target_id);
-      targets.push(target);
-
-    }
-  }
-
-  else {
-  for (let i = 0; i < cidades_do_bloco.length; i++) {
-
-      if (letra == 'K' && i == 4) continue;
-
-      let r = Math.floor(i / MAX_COLS); // linha dentro do bloco
-      let c = i % MAX_COLS;             // coluna dentro do bloco
-
-      if (letra == 'P') r++;
-      else if (letra == 'N') r += 2;
-
-      let target_x = bloco_x + c * (target_size + h_margin) + target_size/2;
-      let target_y = bloco_y + r * (target_size + v_margin) + target_size/2;
-
-      if (letra == 'P' || letra == 'N') target_y += 20;
-      else if (letra == 'R') target_y -= 50;
-
-      let target_label = cidades_do_bloco[i];
-      let target_id = getIdByCidade(target_label);
-
-      let target = new Target(target_x, target_y, target_size, target_label, target_id);
-      targets.push(target);
-  }
-  }
-
-  if (letra == 'O' || letra == 'M') continue;
-
-  // posição do bloco na grade 4x4
-
-  if (letra == 'S') bloco_index++;
-
-  let bloco_col = bloco_index % 4;
-  let bloco_row = Math.floor(bloco_index / 4);
-  bloco_x = 40 + bloco_col * (bloco_largura + 40);
-  bloco_y = 40 + bloco_row * (bloco_altura + 40);
-
-  if (letra == 'R') bloco_x += 150
-  else if (letra == 'N') bloco_y -= 25;
-  else if (letra == 'S') bloco_y -= 20;
-
-  bloco_index++;
-}
 }
 
 // Is invoked when the canvas is resized (e.g., when we go fullscreen)
@@ -351,9 +303,9 @@ function windowResized()
     // Below we find out out white space we can have between 2 cm targets
     let screen_width   = display.width * 2.54;             // screen width
     let screen_height  = display.height * 2.54;            // screen height
-    let target_size    = 2.1;                              // sets the target size (will be converted to cm when passed to createTargets)
-    let horizontal_gap = screen_width - (target_size+0.7) * GRID_COLUMNS;// empty space in cm across the x-axis (based on 10 targets per row)
-    let vertical_gap   = screen_height - target_size * GRID_ROWS;  // empty space in cm across the y-axis (based on 8 targets per column)
+    let target_size    = 1.2;                              // sets the target size (will be converted to cm when passed to createTargets)
+    let horizontal_gap = screen_width - (target_size+1.2) * GRID_COLUMNS;// empty space in cm across the x-axis (based on 10 targets per row)
+    let vertical_gap   = screen_height - (target_size+1) * GRID_ROWS;  // empty space in cm across the y-axis (based on 8 targets per column)
 
     // Creates and positions the UI targets according to the white space defined above (in cm!)
     // 80 represent some margins around the display (e.g., for text)
