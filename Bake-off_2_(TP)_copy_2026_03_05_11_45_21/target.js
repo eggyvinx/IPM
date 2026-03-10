@@ -139,7 +139,7 @@ draw()
   text(first, this.x, this.y - 1.2 * 20);
 
   // resto
-  textStyle("Arial");
+  textStyle(NORMAL);
   textSize(normal);
   fill(255);
   text(rest, this.x, this.y + 15);
