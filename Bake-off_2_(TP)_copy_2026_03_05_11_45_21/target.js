@@ -21,55 +21,127 @@ class Target
   // and its label
 draw()
 {
-  fill(155);
+  fill(0);
   circle(this.x, this.y, this.width);
 
   let first = this.label[0];
   let rest  = this.label.slice(1);
 
-  let big = 33;
-  let normal = 21;
+  let big = 50.0;
+  let normal = 25.0;
 
+  switch(first) {
+    case 'A':
+      fill(48, 25, 52);
+      circle(this.x, this.y, this.width);
+      break;
+    case 'B':
+      fill(54, 69, 79);
+      circle(this.x, this.y, this.width);
+      break;
+    case 'C':
+      fill(2, 48, 32);
+      circle(this.x, this.y, this.width);
+      break;
+    case 'D':
+      fill(0, 0, 204);
+      circle(this.x, this.y, this.width);
+      break;
+    case 'F':
+      fill(53, 57, 53);
+      circle(this.x, this.y, this.width);
+      break;
+    case 'G':
+      fill(204, 0, 204);
+      circle(this.x, this.y, this.width);
+      break;
+    case 'J':
+      fill(102, 0, 0);
+      circle(this.x, this.y, this.width);
+      break;
+    case 'Q':
+      fill(204, 204, 0);
+      circle(this.x, this.y, this.width);
+      break;
+    case 'U':
+      fill(204, 102, 0);
+      circle(this.x, this.y, this.width);
+      break;
+    case 'V':
+      fill(104, 204, 0);
+      circle(this.x, this.y, this.width);
+      break;
+    case 'Y':
+      fill(0, 102, 204);
+      circle(this.x, this.y, this.width);
+      break;
+    case 'Z':
+      fill(204, 0, 102);
+      circle(this.x, this.y, this.width); 
+      break;
+    case 'K':
+      fill(76, 0, 53);
+      circle(this.x, this.y, this.width);
+      break;
+    case 'L':
+      fill(25, 25, 112);
+      circle(this.x, this.y, this.width);
+      break;
+    case 'M':
+      fill(102, 102, 0);
+      circle(this.x, this.y, this.width);
+      break;
+    case 'N':
+      fill(102, 51, 0);
+      circle(this.x, this.y, this.width);
+      break;
+    case 'O':
+      fill(0, 51, 51);
+      circle(this.x, this.y, this.width);
+      break;
+    case 'P':
+      fill(102, 0, 0);
+      circle(this.x, this.y, this.width);
+      break;
+    case 'R':
+      fill(51, 0, 102);
+      circle(this.x, this.y, this.width);
+      break;
+    case 'S':
+      fill(25, 51, 0);
+      circle(this.x, this.y, this.width);
+      break;
+    case 'T':
+      fill(0, 51, 102);
+      circle(this.x, this.y, this.width);
+      break;
+    default:
+      fill(255);
+  }
   textAlign(CENTER);
 
+  
+
   // largura do resto
-  textSize(normal);
+  
   let rest_w = textWidth(rest);
-
-  // primeira letra (maior)
-  textSize(big);
+  // primeira let21212ra (maior)
+  textSize(normal);
   switch(first) {
-    case 'A': fill(255,0,0); break;
-    case 'B': fill(0,255,0); break;
-    case 'C': fill(0,0,255); break;
-    case 'D': fill(255,255,0); break;
-    case 'F': fill(255,0,255); break;
-    case 'G': fill(0,255,255); break;
-    case 'J': fill(255,128,0); break;
-    case 'K': fill(128,0,255); break;
-    case 'L': fill(0,128,255); break;
-    case 'M': fill(128,255,0); break;
-    case 'N': fill(255,0,128); break;
-    case 'O': fill(0,255,128); break;
-    case 'P': fill(255,128,255); break;
-    case 'Q': fill(255,128,128); break;
-    case 'R': fill(128,255,128); break;
-    case 'S': fill(200,100,50); break;
-    case 'T': fill(50,255,100); break;
-    case 'U': fill(100,50,200); break;
-    case 'V': fill(200,50,150); break;
-    case 'Y': fill(50,150,200); break;
-    case 'Z': fill(150,200,50); break;
-    default: fill(255);
+    case 'S':
+      fill(255,0,0);
+      break;
+    default:
+      fill(255);
   }
-
+  textSize(big);
   textStyle(BOLD);
-  text(first, this.x - rest_w/2, this.y);
+  text(first, this.x, this.y - 1.2 * 20);
 
   // resto
   textStyle(NORMAL);
   textSize(normal);
   fill(255);
-  text(rest, this.x + textWidth(first)/2, this.y);
+  text(rest, this.x, this.y + 15);
 }
 }

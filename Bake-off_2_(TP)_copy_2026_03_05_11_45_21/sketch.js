@@ -248,7 +248,6 @@ function createTargets(target_size, horizontal_gap, vertical_gap)
     else if (letra == 'J') grupos['F'].push(cidades[i]);
 
     else if (letra == 'L') {
-      if (!j++) grupos['K'].push("");
       grupos['K'].push(cidades[i]);
     }
 
@@ -283,8 +282,9 @@ for (let letra in grupos) {
 
       let target_label = cidades_do_bloco[i];
       let target_id = getIdByCidade(target_label);
-
-      let target = new Target(target_x, target_y, target_size, target_label, target_id);
+      
+      
+      let target = new Target(target_x, target_y, target_size, target_label[0] + target_label, target_id);
       targets.push(target);
 
     }
@@ -292,8 +292,6 @@ for (let letra in grupos) {
 
   else {
   for (let i = 0; i < cidades_do_bloco.length; i++) {
-
-      if (letra == 'K' && i == 4) continue;
 
       let r = Math.floor(i / MAX_COLS); // linha dentro do bloco
       let c = i % MAX_COLS;             // coluna dentro do bloco
@@ -309,8 +307,9 @@ for (let letra in grupos) {
 
       let target_label = cidades_do_bloco[i];
       let target_id = getIdByCidade(target_label);
+      
 
-      let target = new Target(target_x, target_y, target_size, target_label, target_id);
+      let target = new Target(target_x, target_y, target_size, target_label[0] + target_label, target_id);
       targets.push(target);
   }
   }
