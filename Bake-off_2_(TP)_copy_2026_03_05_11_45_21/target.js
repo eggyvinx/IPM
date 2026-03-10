@@ -21,8 +21,6 @@ class Target
   // and its label
 draw()
 {
-  fill(0);
-  circle(this.x, this.y, this.width);
 
   let first = this.label[0];
   let rest  = this.label.slice(1);
@@ -118,6 +116,13 @@ draw()
     default:
       fill(255);
   }
+  if(target_corretos.includes(this.id)){
+    fill(0, 255, 0);
+    circle(this.x, this.y, this.width);
+    fill(0, 0, 0);
+    text
+  }
+  
   textAlign(CENTER);
 
   
@@ -127,21 +132,23 @@ draw()
   let rest_w = textWidth(rest);
   // primeira let21212ra (maior)
   textSize(normal);
-  switch(first) {
-    case 'S':
-      fill(255,0,0);
-      break;
-    default:
-      fill(255);
-  }
+  fill(255);
   textSize(big);
   textStyle(BOLD);
+
   text(first, this.x, this.y - 1.2 * 20);
 
   // resto
-  textStyle(NORMAL);
+  textStyle("Arial");
   textSize(normal);
   fill(255);
   text(rest, this.x, this.y + 15);
+  if(target_corretos.includes(this.id)){
+    fill(0, 255, 0);
+    circle(this.x, this.y, this.width);
+    fill(0, 0, 0);
+    text(first, this.x, this.y - 1.2 * 20);
+    text(rest, this.x, this.y + 15);
+  }
 }
 }

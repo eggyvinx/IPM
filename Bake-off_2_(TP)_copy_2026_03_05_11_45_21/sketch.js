@@ -20,6 +20,9 @@ let testStartTime, testEndTime;     // time between the start and end of one att
 let hits 			      = 0;      // number of successful selections
 let misses 			      = 0;      // number of missed selections (used to calculate accuracy)
 let database;                       // Firebase DB  
+var target_corretos = [];
+var corSound;
+var wroSound;
 
 // Study control parameters (DO NOT CHANGE!)
 let draw_targets          = false;  // used to control what to show in draw()
@@ -36,6 +39,8 @@ const GRID_COLUMNS        = 10;     // We divide our 80 targets in a 8x10 grid
 function preload()
 {
   // id,name,...
+  corSound = new Audio("../Duolingo Correct Sound Effect (mp3cut.net)(1).mp3");
+  wroSound = new Audio("../Bake-off_2_(TP)_copy_2026_03_05_11_45_21_incorrect_sound(1) (mp3cut.net).mp3");
   const preamble = GROUP_NUMBER < 10 ? 'legendas/G_0' : 'legendas/G_';
   legendas = loadTable(preamble+GROUP_NUMBER+'.csv', 'csv', 'header');
 }
@@ -43,6 +48,7 @@ function preload()
 // Runs once at the start
 function setup()
 {
+  
   createCanvas(700, 500);    // window size in px before we go into fullScreen()
   frameRate(60);             // frame rate (DO NOT CHANGE!)
   
@@ -162,8 +168,16 @@ function mousePressed()
         print("targ id: " + targets[i].id + " trial id: " + trials[current_trial]);
         print(targets[i].id == trials[current_trial] + 1);
         // Checks if it was the correct target
-        if (targets[i].id == trials[current_trial] + 1) hits++;
-        else misses++;
+        if (targets[i].id == trials[current_trial] + 1) {
+          hits++;
+          target_corretos.push(targets[i].id);
+          corSound.play();
+        }
+        else {
+          misses++;
+          wroSound.play();
+          
+        }
         
         current_trial++;              // Move on to the next trial/target
         break;
@@ -202,6 +216,7 @@ function continueTest()
   misses = 0;
   
   current_trial = 0;
+  target_corretos = [];
   continue_button.remove();
   
   // Shows the targets again
