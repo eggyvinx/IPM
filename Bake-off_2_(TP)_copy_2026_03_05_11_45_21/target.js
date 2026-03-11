@@ -94,7 +94,7 @@ draw()
       circle(this.x, this.y, this.width);
       break;
     case 'O':
-      fill(0, 51, 51);
+      fill(0, 0, 51);
       circle(this.x, this.y, this.width);
       break;
     case 'P':

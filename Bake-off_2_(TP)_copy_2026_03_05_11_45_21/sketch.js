@@ -39,8 +39,8 @@ const GRID_COLUMNS        = 10;     // We divide our 80 targets in a 8x10 grid
 function preload()
 {
   // id,name,...
-  corSound = new Audio("../Duolingo Correct Sound Effect (mp3cut.net)(1).mp3");
-  wroSound = new Audio("../Bake-off_2_(TP)_copy_2026_03_05_11_45_21_incorrect_sound(1) (mp3cut.net).mp3");
+  corSound = new Audio("./Duolingo Correct Sound Effect (mp3cut.net)(1).mp3");
+  wroSound = new Audio("./Bake-off_2_(TP)_copy_2026_03_05_11_45_21_incorrect_sound(1) (mp3cut.net).mp3");
   const preamble = GROUP_NUMBER < 10 ? 'legendas/G_0' : 'legendas/G_';
   legendas = loadTable(preamble+GROUP_NUMBER+'.csv', 'csv', 'header');
 }
