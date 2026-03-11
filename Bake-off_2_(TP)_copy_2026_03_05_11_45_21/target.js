@@ -43,7 +43,7 @@ draw()
       break;
     case 'D':
       fill(0, 0, 204);
-      circle(this.x, this.y, this.width);
+      rect(this.x - this.width/2, this.y - this.width/2, this.width);
       break;
     case 'F':
       fill(53, 57, 53);
@@ -51,7 +51,7 @@ draw()
       break;
     case 'G':
       fill(204, 0, 204);
-      circle(this.x, this.y, this.width);
+      rect(this.x - this.width/2, this.y - this.width/2, this.width);
       break;
     case 'J':
       fill(102, 0, 0);
@@ -59,23 +59,23 @@ draw()
       break;
     case 'Q':
       fill(204, 204, 0);
-      circle(this.x, this.y, this.width);
+      rect(this.x - this.width/2, this.y - this.width/2, this.width);
       break;
     case 'U':
       fill(204, 102, 0);
-      circle(this.x, this.y, this.width);
+      rect(this.x - this.width/2, this.y - this.width/2, this.width);
       break;
     case 'V':
       fill(104, 204, 0);
-      circle(this.x, this.y, this.width);
+      rect(this.x - this.width/2, this.y - this.width/2, this.width);
       break;
     case 'Y':
       fill(0, 102, 204);
-      circle(this.x, this.y, this.width);
+      rect(this.x - this.width/2, this.y - this.width/2, this.width);
       break;
     case 'Z':
       fill(204, 0, 102);
-      circle(this.x, this.y, this.width); 
+      rect(this.x - this.width/2, this.y - this.width/2, this.width);
       break;
     case 'K':
       fill(76, 0, 53);
@@ -120,7 +120,6 @@ draw()
     fill(0, 255, 0);
     circle(this.x, this.y, this.width);
     fill(0, 0, 0);
-    text
   }
   
   textAlign(CENTER);
@@ -143,7 +142,15 @@ draw()
   textSize(normal);
   fill(255);
   text(rest, this.x, this.y + 15);
-  if(target_corretos.includes(this.id)){
+  if(target_corretos.includes(this.id) && ( first == 'D' || first == 'G' || first == 'Q' 
+    || first == 'U' || first == 'V' || first == 'Z' || first == 'Y')){
+    fill(0, 255, 0);
+    rect(this.x - this.width/2, this.y - this.width/2, this.width);
+    fill(0, 0, 0);
+    text(first, this.x, this.y - 1.2 * 20);
+    text(rest, this.x, this.y + 15);
+  } 
+  else if(target_corretos.includes(this.id)) {
     fill(0, 255, 0);
     circle(this.x, this.y, this.width);
     fill(0, 0, 0);
