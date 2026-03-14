@@ -236,7 +236,9 @@ function getMaxCols(len) {
   switch(len) {
     case 1: max_cols = 1; break;
     case 2: max_cols = 2; break;
+    case 3: max_cols = 2; break;
     case 4: max_cols = 2; break
+    case 5: max_cols = 2; break;
     default: max_cols = 3; break;
   }
   return max_cols;
@@ -279,7 +281,7 @@ function createTargets(target_size, horizontal_gap, vertical_gap, block_h_gap, b
 
   let bloco_idx = 1;
   let starting_x = 190;
-  let starting_y = 200;
+  let starting_y = 160;
 
   let next_x = starting_x;
   let next_y = starting_y;
@@ -334,15 +336,15 @@ function createTargets(target_size, horizontal_gap, vertical_gap, block_h_gap, b
       case 'L':
         target_x += 10; break;
       case 'G':
-        target_x += 120;
+        target_x += 210;
         target_y += 30;
         break;
       case 'J':
-        target_x += 130;
+        target_x += 290;
         target_y += 30;
         break;
       case 'N':
-        target_x += 70;
+        target_x += 165;
         target_y += 10;
         break;
       case 'Q':
@@ -350,27 +352,30 @@ function createTargets(target_size, horizontal_gap, vertical_gap, block_h_gap, b
         target_y += 20;
         break;
       case 'K':
-        target_x += 100;
+        target_x += 270;
         target_y += 15;
         break;
       case 'O':
         target_y += 30;
-        target_x += 17;
+        target_x += 140;
         break;
       case 'M':
-        target_y -= 20;
-        target_x += 30;
+        target_x += 60;
         break;
       case 'R':
         target_x -= 30; break;
       case 'S':
-        target_y += 32;
-        target_x += 15;
+        target_y += 60;
+        target_x += 75;
         break;
       case 'T':
-        target_x += 200; break;
+        target_x += 260;
+        target_y -= 50;
+        break;
       case 'U':
-        target_x += 410; break;
+        target_x += 380;
+        target_y -= 50;
+        break;
       default: break;
     }
     
@@ -428,7 +433,7 @@ function windowResized()
     let vertical_gap   = screen_height - (target_size+0.9) * GRID_ROWS;  // empty space in cm across the y-axis (based on 8 targets per column)
 
     let block_h_gap = 5;
-    let block_v_gap = 0.2;
+    let block_v_gap = 0.3;
 
     // Creates and positions the UI targets according to the white space defined above (in cm!)
     // 80 represent some margins around the display (e.g., for text)
