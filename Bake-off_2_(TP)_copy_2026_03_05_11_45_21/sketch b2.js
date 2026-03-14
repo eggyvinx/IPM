@@ -32,9 +32,15 @@ let targets               = [];
 const GRID_ROWS           = 8;      // We divide our 80 targets in a 8x10 grid
 const GRID_COLUMNS        = 10;     // We divide our 80 targets in a 8x10 grid
 
+let correct_sound;
+let incorrect_sound;
+
 // Ensures important data is loaded before the program starts
+
 function preload()
 {
+  correct_sound = loadSound('correct_sound.mp3');
+  incorrect_sound = loadSound('incorrect_sound.mp3');
   // id,name,...
   const preamble = GROUP_NUMBER < 10 ? 'legendas/G_0' : 'legendas/G_';
   legendas = loadTable(preamble+GROUP_NUMBER+'.csv', 'csv', 'header');
@@ -66,6 +72,8 @@ function draw()
         
     // Draw all targets
 	for (var i = 0; i < legendas.getRowCount(); i++) targets[i].draw();
+
+    textStyle(NORMAL);
     
     // Draws the target label to be selected in the current trial. We include 
     // a black rectangle behind the trial label for optimal contrast in case 
@@ -162,8 +170,14 @@ function mousePressed()
         print("targ id: " + targets[i].id + " trial id: " + trials[current_trial]);
         print(targets[i].id == trials[current_trial] + 1);
         // Checks if it was the correct target
-        if (targets[i].id == trials[current_trial] + 1) hits++;
-        else misses++;
+        if (targets[i].id == trials[current_trial] + 1) {
+          correct_sound.play();
+          hits++;
+        }
+        else {
+          incorrect_sound.play();
+          misses++;
+        }
         
         current_trial++;              // Move on to the next trial/target
         break;

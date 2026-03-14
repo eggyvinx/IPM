@@ -40,6 +40,7 @@ function preload()
 {
   correct_sound = loadSound('correct_sound.mp3');
   incorrect_sound = loadSound('incorrect_sound.mp3');
+
   // id,name,...
   const preamble = GROUP_NUMBER < 10 ? 'legendas/G_0' : 'legendas/G_';
   legendas = loadTable(preamble+GROUP_NUMBER+'.csv', 'csv', 'header');
@@ -303,7 +304,7 @@ function windowResized()
     // Below we find out out white space we can have between 2 cm targets
     let screen_width   = display.width * 2.54;             // screen width
     let screen_height  = display.height * 2.54;            // screen height
-    let target_size    = 1.2;                              // sets the target size (will be converted to cm when passed to createTargets)
+    let target_size    = 0.8;                              // sets the target size (will be converted to cm when passed to createTargets)
     let horizontal_gap = screen_width - (target_size+1.2) * GRID_COLUMNS;// empty space in cm across the x-axis (based on 10 targets per row)
     let vertical_gap   = screen_height - (target_size+1) * GRID_ROWS;  // empty space in cm across the y-axis (based on 8 targets per column)
 
