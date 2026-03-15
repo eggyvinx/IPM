@@ -8,6 +8,42 @@ class Target
     this.width  = w;
     this.label  = l;
     this.id     = id;
+
+    this.sizes = {
+      A:[36,27],
+      C:[36,27],
+      D:[50,43],
+      G:[50,43],
+      Q:[50,43],
+      J:[43,33],
+      T:[43,34],
+      S:[40,28],
+      R:[42,27]
+    };
+
+    this.first_cor_tab = {
+      A: [154,255,151],
+      B: [240,230,140],
+      C: [0,100,200],
+      D: [255,255,0],
+      F: [255,0,255],
+      G: [127,255,212],
+      J: [255,140,0],
+      K: [128,0,255],
+      L: [240,20,60],
+      M: [57, 255, 20],
+      N: [255,0,128],
+      O: [0,255,128],
+      P: [255,128,255],
+      Q: [255,128,128],
+      R: [255, 215, 0],
+      S: [0,255,255],
+      T: [255,20,147],
+      U: [100,50,200],
+      V: [200,50,150],
+      Y: [50,150,200],
+      Z: [150,200,50]
+    };
   }
   
   // Checks if a mouse click took place
@@ -21,151 +57,53 @@ class Target
   // and its label
 draw()
 {
+  
+  // balls
 
-  fill(12);
-  circle(this.x, this.y, this.width);
+  if(target_corretos.includes(this.id)){
+    fill(85);
+    circle(this.x, this.y, this.width);
+  } else {
+    fill(18);
+    circle(this.x, this.y, this.width);
+  }
+
+  // text
 
   let first = this.label[0];
   let rest  = this.label.slice(1);
-  //rest = rest.replaceAll(" ", "\n");
 
   let big;
   let normal;
 
-  switch(first) {
-    case 'D':
-      big = 50;
-      normal = 43;
-      break;
-    case 'G':
-      big = 50;
-      normal = 43;
-      break;
-    case 'Q':
-      big = 50;
-      normal = 43;
-      break;
-    case 'M':
-      big = 40;
-      normal = 30;
-      rest = " " + rest;
-      break;
-    case 'N':
-      big = 40;
-      normal = 30;
-      rest = " " + rest;
-      break;
-    case 'J':
-      big = 43;
-      normal = 33;
-      rest = " " + rest;
-      break;
-    case 'F':
-      big = 40;
-      normal = 30;
-      rest = " " + rest;
-      break;
-    case 'L':
-      big = 40;
-      normal = 30;
-      rest = " " + rest;
-      break;
-    case 'T':
-      big = 43;
-      normal = 34;
-      rest = " " + rest;
-      break;
-    case 'U':
-      big = 40;
-      normal = 30;
-      rest = " " + rest;
-      break;
-    case 'V':
-      big = 40;
-      normal = 30;
-      rest = " " + rest;
-      break;
-    case 'Z':
-      big = 40;
-      normal = 30;
-      rest = " " + rest;
-      break;
-    case 'Y':
-      big = 40;
-      normal = 30;
-      rest = " " + rest;
-      break;
-    case 'K':
-      big = 40;
-      normal = 30;
-      rest = " " + rest;
-      break;
-    case 'O':
-      big = 40;
-      normal = 30;
-      rest = " " + rest;
-      break;
-    case 'P':
-      big = 40;
-      normal = 30;
-      rest = " " + rest;
-      break;
-    case 'S':
-      big = 40;
-      normal = 28;
-      rest = " " + rest;
-      break;
-    case 'R':
-      big = 42;
-      normal = 27;
-      rest = " " + rest;
-      break;
-    default:
-      big = 36;
-      normal = 27;
-      rest = " " + rest;
+  let size = this.sizes[first];
+
+  if (size) {
+    [big, normal] = size;
+  } else {
+    big = 40;
+    normal = 30;
   }
+
+  if (!(first == 'D' || first == 'G' || first == 'Q')) rest = " " + rest;
 
   textAlign(CENTER);
 
   // largura do resto
   textFont("Arial", normal);
-  let rest_w = textWidth(rest);
+  let rest_w = textWidth(rest); // width muda dependendo da fonte ^
 
-  // primeira letra (maior)
+  let first_cor = this.first_cor_tab[first];
+  fill(...first_cor);
   textFont("Arial", big);
-  switch(first) {
-    case 'A': fill(255,240,245); break;
-    case 'B': fill(240,230,140); break;
-    case 'C': fill(0,100,200); break;
-    case 'D': fill(255,255,0); break;
-    case 'F': fill(255,0,255); break;
-    case 'G': fill(127,255,212); break;
-    case 'J': fill(255,140,0); break;
-    case 'K': fill(128,0,255); break;
-    case 'L': fill(240,20,60); break;
-    case 'M': fill(57, 255, 20); break;
-    case 'N': fill(255,0,128); break;
-    case 'O': fill(0,255,128); break;
-    case 'P': fill(255,128,255); break;
-    case 'Q': fill(255,128,128); break;
-    case 'R': fill(255, 215, 0); break;
-    case 'S': fill(0,255,255); break;
-    case 'T': fill(255,20,147); break;
-    case 'U': fill(100,50,200); break;
-    case 'V': fill(200,50,150); break;
-    case 'Y': fill(50,150,200); break;
-    case 'Z': fill(150,200,50); break;
-    default: fill(255);
-  }
-
   textStyle(BOLD);
   text(first, this.x - rest_w/2, this.y);
 
   // resto
-  textStyle(NORMAL);
-  textFont("Arial", normal);
   fill(255);
+  textFont("Arial", normal);
+  textStyle(NORMAL);
   text(rest, this.x + textWidth(first)/2, this.y);
+
 }
 }

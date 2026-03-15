@@ -43,7 +43,7 @@ function drawUserIDScreen()
 // Verifies if the student ID is a number, and within an acceptable range
 function validID()
 {
-  //return true;
+  return true;
 
   if(parseInt(student_ID_form.value()) < 200000 && parseInt(student_ID_form.value()) > 1000) return true
   else 
@@ -56,7 +56,7 @@ function validID()
 // Verifies if the display size is a number, and within an acceptable range (>13")
 function validSize()
 {
-  //return true;
+  return true;
   if (parseInt(display_size_form.value()) < 50 && parseInt(display_size_form.value()) >= 13) return true
   else
   {
@@ -72,8 +72,8 @@ function startTest()
   {
     // Saves student and display information
     student_ID = parseInt(student_ID_form.value());
-    display_size = parseInt(display_size_form.value());
-    //display_size = 15;
+    //display_size = parseInt(display_size_form.value());
+    display_size = 15;
 
     // Deletes UI elements
     main_text.remove();

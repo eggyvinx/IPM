@@ -20,6 +20,7 @@ let testStartTime, testEndTime;     // time between the start and end of one att
 let hits 			      = 0;      // number of successful selections
 let misses 			      = 0;      // number of missed selections (used to calculate accuracy)
 let database;                       // Firebase DB  
+let target_corretos = [];
 
 // Study control parameters (DO NOT CHANGE!)
 let draw_targets          = false;  // used to control what to show in draw()
@@ -167,11 +168,10 @@ function mousePressed()
       // Check if the user clicked over one of the targets
       if (targets[i].clicked(mouseX, mouseY)) 
       {                
-        print("targ id: " + targets[i].id + " trial id: " + trials[current_trial]);
-        print(targets[i].id == trials[current_trial] + 1);
         // Checks if it was the correct target
         if (targets[i].id == trials[current_trial] + 1) {
           correct_sound.play();
+          target_corretos.push(targets[i].id);
           hits++;
         }
         else {
@@ -216,6 +216,7 @@ function continueTest()
   misses = 0;
   
   current_trial = 0;
+  target_corretos = [];
   continue_button.remove();
   
   // Shows the targets again
@@ -244,6 +245,38 @@ function getMaxCols(len) {
   return max_cols;
 }
 
+const pos_offsets = {
+  D:[90,75],
+  F:[10,0],
+  L:[10,0],
+  G:[210,30],
+  J:[290,30],
+  N:[165,10],
+  Q:[60,20],
+  K:[270,15],
+  O:[140,30],
+  M:[60,0],
+  R:[-30,0],
+  S:[75,60],
+  T:[260,-50],
+  U:[380,-50]
+};
+
+const h_margin_offset = {
+  C: 30,
+  F: 45,
+  J: -70,
+  N: -10,
+  L: 44,
+  P: 23,
+  K: 24,
+  M: -70,
+  T: 7,
+  U: 10,
+  O: 13,
+  S: -5
+}
+
 // Creates and positions the UI targets
 function createTargets(target_size, horizontal_gap, vertical_gap, block_h_gap, block_v_gap) {
 
@@ -251,8 +284,6 @@ function createTargets(target_size, horizontal_gap, vertical_gap, block_h_gap, b
   // for the number of targets minus one
   h_margin = horizontal_gap / 20;
   v_margin = vertical_gap / (6) + 5;
-  
-  // Set targets in a 8 x 10
 
   let cidades = [];
 
@@ -274,14 +305,12 @@ function createTargets(target_size, horizontal_gap, vertical_gap, block_h_gap, b
     else grupos[letra].push(cidades[i]);
   }
 
-  let max_grid_cols = 4;
-  let max_grid_rows = 5;
+  const max_grid_cols = 4;
   let bloco_largura;
-  let bloco_altura;
 
   let bloco_idx = 1;
-  let starting_x = 190;
-  let starting_y = 160;
+  const starting_x = 190;
+  const starting_y = 160;
 
   let next_x = starting_x;
   let next_y = starting_y;
@@ -289,7 +318,6 @@ function createTargets(target_size, horizontal_gap, vertical_gap, block_h_gap, b
   const keys = Object.keys(grupos);
   const keys_len = keys.length;
   for (let key = 0; key < keys_len; key++) {
-  //for (letra in grupos) {
     let letra = keys[key];
     let cidades_do_bloco = grupos[letra]; 
     if (!cidades_do_bloco) continue;
@@ -297,86 +325,24 @@ function createTargets(target_size, horizontal_gap, vertical_gap, block_h_gap, b
     let max_cols = getMaxCols(cidades_len);
   
     bloco_largura = max_cols;
-    //bloco_altura = Math.ceil(cidades_len / max_cols);
 
-    switch(letra) {
-      case 'C': h_margin += 30; break;
-      case 'F': h_margin += 45; break;
-      case 'J': h_margin -= 70; break;
-      case 'N': h_margin -= 10; break;
-      case 'L': h_margin += 44; break;
-      case 'P': h_margin += 23; break;
-      case 'K': h_margin += 24; break;
-      case 'M': h_margin -= 70; break;
-      case 'T': h_margin += 7; break;
-      case 'U': h_margin += 10; break;
-      case 'O': h_margin += 13; break;
-      case 'S': h_margin -= 5; break;
-      default: break;
-    }
-
+    // ajuste manual
+    let hMargin_offset = h_margin_offset[letra];
+    if (hMargin_offset) h_margin += hMargin_offset;
 
     for (let i = 0; i < cidades_len; i++) {
 
     let blockRow = Math.floor(i / max_cols); // linha do target dentro do bloco
     let blockCol = i % max_cols;             // coluna do target dentro do bloco
 
-
-
     let target_x = next_x + blockCol * (target_size + h_margin + 50) + target_size/2;
     let target_y = next_y + blockRow * (target_size + v_margin) + target_size/2;
 
-    switch(letra) {
-      case 'D':
-        target_x += 90;
-        target_y += 75;
-        break;
-      case 'F':
-        target_x += 10; break;
-      case 'L':
-        target_x += 10; break;
-      case 'G':
-        target_x += 210;
-        target_y += 30;
-        break;
-      case 'J':
-        target_x += 290;
-        target_y += 30;
-        break;
-      case 'N':
-        target_x += 165;
-        target_y += 10;
-        break;
-      case 'Q':
-        target_x += 60;
-        target_y += 20;
-        break;
-      case 'K':
-        target_x += 270;
-        target_y += 15;
-        break;
-      case 'O':
-        target_y += 30;
-        target_x += 140;
-        break;
-      case 'M':
-        target_x += 60;
-        break;
-      case 'R':
-        target_x -= 30; break;
-      case 'S':
-        target_y += 60;
-        target_x += 75;
-        break;
-      case 'T':
-        target_x += 260;
-        target_y -= 50;
-        break;
-      case 'U':
-        target_x += 380;
-        target_y -= 50;
-        break;
-      default: break;
+    // ajuste manual
+    let offset = pos_offsets[letra];
+    if (offset) {
+      target_x += offset[0];
+      target_y += offset[1];
     }
     
     let target_label = cidades_do_bloco[i];
@@ -387,21 +353,18 @@ function createTargets(target_size, horizontal_gap, vertical_gap, block_h_gap, b
 
     }
     
-    
-    let bloco_col = bloco_idx % (max_grid_cols);
+    let bloco_col = bloco_idx % (max_grid_cols); // col do proximo bloco na grid
 
-   // print("letra",letra,"bloco_col",bloco_col,"bloco idx:",bloco_idx,"max_grid_cols:",max_grid_cols);
-
-    let above_key = key - (max_grid_cols - 1);
+    let above_key = key - (max_grid_cols - 1);  // above_bloco, bloco que está acima do proximo bloco na grid
+    let above_bloco_altura;
     if (above_key >= 0) {
       let above_len = grupos[keys[above_key]].length;
       let above_max_cols = getMaxCols(above_len);
-      bloco_altura = Math.ceil(above_len / above_max_cols);
-      print("blocoidx:",bloco_idx,"letra",letra, "bloco alutra:", bloco_altura, "above cols:", above_max_cols, "above len:", above_len);
+      above_bloco_altura = Math.ceil(above_len / above_max_cols);
     }
 
     if (bloco_col == 0) {
-      next_y += bloco_altura * (target_size + v_margin) + block_v_gap;
+      next_y += above_bloco_altura * (target_size + v_margin) + block_v_gap;
       next_x = starting_x;
     }
     else next_x += bloco_largura * (target_size) + block_h_gap - 40;
