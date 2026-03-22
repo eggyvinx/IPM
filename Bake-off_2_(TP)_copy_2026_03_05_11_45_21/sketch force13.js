@@ -309,8 +309,8 @@ function createTargets(target_size, horizontal_gap, vertical_gap, block_h_gap, b
   let bloco_largura;
 
   let bloco_idx = 1;
-  const starting_x = 180 + 5 * (display_size - 13);
-  const starting_y = 50 + 5 * (display_size-13);
+  const starting_x = 180;
+  const starting_y = 50;
 
   let next_x = starting_x;
   let next_y = starting_y;
@@ -393,10 +393,10 @@ function windowResized()
     let screen_height  = display.height * 2.54;            // screen height
     let target_size    = 1.2;                              // sets the target size (will be converted to cm when passed to createTargets)
     let horizontal_gap = screen_width - (target_size+1.1) * GRID_COLUMNS;// empty space in cm across the x-axis (based on 10 targets per row)
-    let vertical_gap   = screen_height - (target_size+0.9) * GRID_ROWS + ((display_size - 15) / 2);  // empty space in cm across the y-axis (based on 8 targets per column)
+    let vertical_gap   = screen_height - (target_size+0.9) * GRID_ROWS - 1;  // empty space in cm across the y-axis (based on 8 targets per column)
 
-    let block_h_gap = display_size * 0.33;
-    let block_v_gap = display_size * 0.02;
+    let block_h_gap = 3.9;
+    let block_v_gap = 0.25;
 
     // Creates and positions the UI targets according to the white space defined above (in cm!)
     // 80 represent some margins around the display (e.g., for text)
