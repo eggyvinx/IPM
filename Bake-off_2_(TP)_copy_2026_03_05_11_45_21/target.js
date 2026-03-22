@@ -1,11 +1,11 @@
 // Target class (position and width)
 class Target
 {
-  constructor(x, y, w, l, id)
-  {
+  constructor(x, y, w, l, id) {
+
     this.x      = x;
     this.y      = y;
-    this.width  = w;
+    this.width  = 1.3*w;
     this.label  = l;
     this.id     = id;
 
@@ -44,6 +44,30 @@ class Target
       Y: [50,150,200],
       Z: [150,200,50]
     };
+    
+    this.circle_color = {
+      A: [62,102,60],
+      B: [96,92,56],
+      C: [0,40,80],
+      D: [102,102,0],
+      F: [102,0,102],
+      G: [51,102,85],
+      J: [102,56,0],
+      K: [51,0,102],
+      L: [96,8,24],
+      M: [23,102,8],
+      N: [102,0,51],
+      O: [0,102,51],
+      P: [102,51,102],
+      Q: [102,51,51],
+      R: [102,86,0],
+      S: [0,102,102],
+      T: [102,8,59],
+      U: [40,20,80],
+      V: [80,20,60],
+      Y: [20,60,80],
+      Z: [60,80,20]
+    };
   }
   
   // Checks if a mouse click took place
@@ -58,19 +82,20 @@ class Target
 draw()
 {
   
+  let first = this.label[0];
+  
   // balls
 
   if(target_corretos.includes(this.id)){
     fill(85);
     circle(this.x, this.y, this.width);
   } else {
-    fill(18);
+    fill(...this.circle_color[first]);
     circle(this.x, this.y, this.width);
   }
 
   // text
 
-  let first = this.label[0];
   let rest  = this.label.slice(1);
 
   let big;

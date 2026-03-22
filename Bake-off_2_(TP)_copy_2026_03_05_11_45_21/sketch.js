@@ -249,17 +249,17 @@ const pos_offsets = {
   D:[90,75],
   F:[10,0],
   L:[10,0],
-  G:[210,30],
+  G:[210,-10],
   J:[290,30],
-  N:[165,10],
-  Q:[60,20],
+  N:[165,-25],
+  Q:[60,-10],
   K:[270,15],
   O:[140,30],
-  M:[60,0],
-  R:[-30,0],
+  M:[60,-65],
+  R:[-30,-55],
   S:[75,60],
-  T:[260,-50],
-  U:[380,-50]
+  T:[260,-120],
+  U:[380,-130]
 };
 
 const h_margin_offset = {
@@ -278,12 +278,12 @@ const h_margin_offset = {
 }
 
 // Creates and positions the UI targets
-function createTargets(target_size, horizontal_gap, vertical_gap, block_h_gap, block_v_gap) {
+function createTargets(target_size, horizontal_gap, vertical_gap, block_h_gap, block_v_gap, ppcm) {
 
   // Define the margins between targets by dividing the white space 
   // for the number of targets minus one
   h_margin = horizontal_gap / 20;
-  v_margin = vertical_gap / (6) + 5;
+  v_margin = vertical_gap / (20) + 20;
 
   let cidades = [];
 
@@ -309,8 +309,8 @@ function createTargets(target_size, horizontal_gap, vertical_gap, block_h_gap, b
   let bloco_largura;
 
   let bloco_idx = 1;
-  const starting_x = 190;
-  const starting_y = 160;
+  const starting_x = 180;
+  const starting_y = 50;
 
   let next_x = starting_x;
   let next_y = starting_y;
@@ -348,7 +348,7 @@ function createTargets(target_size, horizontal_gap, vertical_gap, block_h_gap, b
     let target_label = cidades_do_bloco[i];
     let target_id = getIdByCidade(target_label);
 
-    let target = new Target(target_x, target_y, target_size, target_label, target_id);
+    let target = new Target(target_x, target_y, ppcm, target_label, target_id);
     targets.push(target);
 
     }
@@ -393,14 +393,14 @@ function windowResized()
     let screen_height  = display.height * 2.54;            // screen height
     let target_size    = 1.2;                              // sets the target size (will be converted to cm when passed to createTargets)
     let horizontal_gap = screen_width - (target_size+1.1) * GRID_COLUMNS;// empty space in cm across the x-axis (based on 10 targets per row)
-    let vertical_gap   = screen_height - (target_size+0.9) * GRID_ROWS;  // empty space in cm across the y-axis (based on 8 targets per column)
+    let vertical_gap   = screen_height - (target_size+0.9) * GRID_ROWS - 1;  // empty space in cm across the y-axis (based on 8 targets per column)
 
-    let block_h_gap = 5;
-    let block_v_gap = 0.3;
+    let block_h_gap = 3.9;
+    let block_v_gap = 0.25;
 
     // Creates and positions the UI targets according to the white space defined above (in cm!)
     // 80 represent some margins around the display (e.g., for text)
-    createTargets(target_size * PPCM, horizontal_gap * PPCM - 80, vertical_gap * PPCM - 120, block_h_gap * PPCM, block_v_gap * PPCM);
+    createTargets(target_size * PPCM, horizontal_gap * PPCM - 80, vertical_gap * PPCM - 120, block_h_gap * PPCM, block_v_gap * PPCM, PPCM);
 
     // Starts drawing targets immediately after we go fullscreen
     draw_targets = true;
