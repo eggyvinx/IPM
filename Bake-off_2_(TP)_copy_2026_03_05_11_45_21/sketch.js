@@ -314,8 +314,8 @@ function createTargets(target_size_cm, horizontal_gap_cm, vertical_gap_cm, block
 
   const max_grid_cols = 4;
 
-  const starting_x_cm = 190 / ppcm;
-  const starting_y_cm = 60 / ppcm;
+  const starting_x_cm = 150 / ppcm;
+  const starting_y_cm = 45 / ppcm;
 
   let next_x_cm = starting_x_cm;
   let next_y_cm = starting_y_cm;
@@ -376,12 +376,6 @@ function createTargets(target_size_cm, horizontal_gap_cm, vertical_gap_cm, block
   }
 }
 
-const TARGET_DIAMETER_CM = 1.5;
-const H_GAP_EXTRA_CM = 0;
-const V_GAP_EXTRA_CM = 1.5;
-const BLOCK_H_GAP_CM = 4;
-const BLOCK_V_GAP_CM = 0.3;
-
 function windowResized() 
 {
   if (fullscreen())
@@ -396,8 +390,12 @@ function windowResized()
     let screen_width_cm  = display.width * 2.54;
     let screen_height_cm = display.height * 2.54;
 
+    const H_GAP_EXTRA_CM = 0;
+    const V_GAP_EXTRA_CM = display_size*0.1;
+    const BLOCK_H_GAP_CM = display_size*0.266667;
+    const BLOCK_V_GAP_CM = display_size*0.02;
     
-    let target_size_cm = TARGET_DIAMETER_CM;
+    let target_size_cm = 0.1*display_size;
 
     let horizontal_gap_cm = screen_width_cm - (target_size_cm + H_GAP_EXTRA_CM) * GRID_COLUMNS;
     let vertical_gap_cm   = screen_height_cm - (target_size_cm + V_GAP_EXTRA_CM) * GRID_ROWS;
