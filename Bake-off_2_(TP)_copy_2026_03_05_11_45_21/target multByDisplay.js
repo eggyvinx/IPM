@@ -5,7 +5,7 @@ class Target
 
     this.x      = x;
     this.y      = y;
-    this.width  = 1.5*w;
+    this.width  = display_size*0.1*w;
     this.label  = l;
     this.id     = id;
 

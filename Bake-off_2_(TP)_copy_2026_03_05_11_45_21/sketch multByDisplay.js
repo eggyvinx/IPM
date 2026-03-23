@@ -245,122 +245,118 @@ function getMaxCols(len) {
   return max_cols;
 }
 
-const pos_offsets_cm = {
-  C:[0.15, 0],
-  D:[2.2, 1.8],
-  F:[0.26, 0],
-  L:[0.26, 0],
-  G:[4.06, -0.26],
-  J:[5.8, 0.39],
-  N:[2.8, -0.66],
-  Q:[1.33, -0.26],
-  K:[6, 0.20],
-  O:[3.06, 0.4],
-  M:[1.59, -1.6],
-  R:[0.6, -1.46],
-  S:[1.98, 0.65],
-  T:[5, -2.4],
-  U:[6.7, -2.66]
+const pos_offsets = {
+  D:[90,75],
+  F:[10,0],
+  L:[10,0],
+  G:[210,-10],
+  J:[290,30],
+  N:[165,-25],
+  Q:[60,-10],
+  K:[270,15],
+  O:[140,30],
+  M:[60,-65],
+  R:[-30,-55],
+  S:[75,60],
+  T:[260,-120],
+  U:[380,-130]
 };
 
-const h_margin_offset_cm = {
-  B: 0.13,
-  C: 0.79,
-  F: 1.19,
-  J: 0,
-  N: 0.2,
-  L: 1.16,
-  P: 0.71,
-  K: 0.63,
-  M: 0.2,
-  T: 0.45,
-  U: 0.43,
-  O: 0.34,
-  S: 0.40,
-  R: 0.79
-};
+const h_margin_offset = {
+  C: 30,
+  F: 45,
+  J: -70,
+  N: -10,
+  L: 44,
+  P: 23,
+  K: 24,
+  M: -70,
+  T: 7,
+  U: 10,
+  O: 13,
+  S: -5
+}
 
 // Creates and positions the UI targets
-function createTargets(target_size_cm, horizontal_gap_cm, vertical_gap_cm, block_h_gap_cm, block_v_gap_cm, ppcm) {
+function createTargets(target_size, horizontal_gap, vertical_gap, block_h_gap, block_v_gap, ppcm) {
 
-  const toPx = (cm) => cm * ppcm;
-
-  
-  const base_h_margin_cm = horizontal_gap_cm / 20 - 50/ppcm;
-  const base_v_margin_cm = vertical_gap_cm / 20 + 18 / ppcm;
+  // Define the margins between targets by dividing the white space 
+  // for the number of targets minus one
+  h_margin = horizontal_gap / 20;
+  v_margin = vertical_gap / (20) + 20;
 
   let cidades = [];
 
   for (let r = 0; r < legendas.getRowCount(); r++) {
-    cidades.push(legendas.getString(r, 1));
+    cidades.push(legendas.getString(r, 1)); // coluna 1 = cidade
   }
 
   cidades.sort();
 
-  let grupos = {};
+  let grupos = {}; // { 'A': [cidades], 'B': [...] }
 
   for (let i = 0; i < cidades.length; i++) {
     let letra = cidades[i][0];
-
     if (!grupos[letra]) grupos[letra] = [];
 
-    if (letra == 'V' || letra == 'Y' || letra == 'Z') {
-      if (!grupos['U']) grupos['U'] = [];
+    if (letra == 'V' || letra == 'Y' || letra == 'Z')
       grupos['U'].push(cidades[i]);
-    } else {
-      grupos[letra].push(cidades[i]);
-    }
+
+    else grupos[letra].push(cidades[i]);
   }
 
   const max_grid_cols = 4;
+  let bloco_largura;
 
-  const starting_x_cm = 190 / ppcm;
-  const starting_y_cm = 60 / ppcm;
+  let bloco_idx = 1;
+  const starting_x = 180 + 5 * (display_size - 13);
+  const starting_y = 50 + 5 * (display_size-13);
 
-  let next_x_cm = starting_x_cm;
-  let next_y_cm = starting_y_cm;
+  let next_x = starting_x;
+  let next_y = starting_y;
 
   const keys = Object.keys(grupos);
-
-  for (let key = 0; key < keys.length; key++) {
+  const keys_len = keys.length;
+  for (let key = 0; key < keys_len; key++) {
     let letra = keys[key];
-    let cidades_do_bloco = grupos[letra];
+    let cidades_do_bloco = grupos[letra]; 
     if (!cidades_do_bloco) continue;
-
     let cidades_len = cidades_do_bloco.length;
     let max_cols = getMaxCols(cidades_len);
+  
+    bloco_largura = max_cols;
 
-    const manual_h_margin_cm = h_margin_offset_cm[letra] ? h_margin_offset_cm[letra] : 0;
-    const group_h_margin_cm = base_h_margin_cm + manual_h_margin_cm;
+    // ajuste manual
+    let hMargin_offset = h_margin_offset[letra];
+    if (hMargin_offset) h_margin += hMargin_offset;
 
     for (let i = 0; i < cidades_len; i++) {
-      let blockRow = Math.floor(i / max_cols);
-      let blockCol = i % max_cols;
 
-      let target_x_cm = next_x_cm + blockCol * (target_size_cm + group_h_margin_cm + 50 / ppcm) + target_size_cm / 2;
-      let target_y_cm = next_y_cm + blockRow * (target_size_cm + base_v_margin_cm) + target_size_cm / 2;
+    let blockRow = Math.floor(i / max_cols); // linha do target dentro do bloco
+    let blockCol = i % max_cols;             // coluna do target dentro do bloco
 
-      let offset = pos_offsets_cm[letra];
-      if (offset) {
-        target_x_cm += offset[0];
-        target_y_cm += offset[1];
-      }
+    let target_x = next_x + blockCol * (target_size + h_margin + 50) + target_size/2;
+    let target_y = next_y + blockRow * (target_size + v_margin) + target_size/2;
 
-      let target_label = cidades_do_bloco[i];
-      let target_id = getIdByCidade(target_label);
-
-      let target_x_px = toPx(target_x_cm);
-      let target_y_px = toPx(target_y_cm);
-
-      let target = new Target(target_x_px, target_y_px, ppcm, target_label, target_id);
-      targets.push(target);
+    // ajuste manual
+    let offset = pos_offsets[letra];
+    if (offset) {
+      target_x += offset[0];
+      target_y += offset[1];
     }
+    
+    let target_label = cidades_do_bloco[i];
+    let target_id = getIdByCidade(target_label);
 
-    let bloco_col = (key + 1) % max_grid_cols;
+    let target = new Target(target_x, target_y, ppcm, target_label, target_id);
+    targets.push(target);
 
-    let above_key = key - (max_grid_cols - 1);
-    let above_bloco_altura = 0;
+    }
+    
+    let bloco_col = bloco_idx % (max_grid_cols); // col do proximo bloco na grid
 
+    let above_key = key - (max_grid_cols - 1);  // above_bloco, bloco que está acima do proximo bloco na grid
+    let above_bloco_altura;
     if (above_key >= 0) {
       let above_len = grupos[keys[above_key]].length;
       let above_max_cols = getMaxCols(above_len);
@@ -368,20 +364,18 @@ function createTargets(target_size_cm, horizontal_gap_cm, vertical_gap_cm, block
     }
 
     if (bloco_col == 0) {
-      next_y_cm += above_bloco_altura * (target_size_cm + base_v_margin_cm) + block_v_gap_cm;
-      next_x_cm = starting_x_cm;
-    } else {
-      next_x_cm += max_cols * target_size_cm + block_h_gap_cm - 40 / ppcm;
+      next_y += above_bloco_altura * (target_size + v_margin) + block_v_gap;
+      next_x = starting_x;
     }
+    else next_x += bloco_largura * (target_size) + block_h_gap - 40;
+
+    bloco_idx++;
   }
+
+
 }
 
-const TARGET_DIAMETER_CM = 1.5;
-const H_GAP_EXTRA_CM = 0;
-const V_GAP_EXTRA_CM = 1.5;
-const BLOCK_H_GAP_CM = 4;
-const BLOCK_V_GAP_CM = 0.3;
-
+// Is invoked when the canvas is resized (e.g., when we go fullscreen)
 function windowResized() 
 {
   if (fullscreen())
@@ -389,28 +383,26 @@ function windowResized()
     resizeCanvas(windowWidth, windowHeight);
     
     // DO NOT CHANGE THE NEXT THREE LINES!
-    let display = new Display({ diagonal: display_size }, window.screen);
-    PPI  = display.ppi;     // calculates pixels per inch
-    PPCM = PPI / 2.54;      // calculates pixels per cm
+    let display        = new Display({ diagonal: display_size }, window.screen);
+    PPI                = display.ppi;                      // calculates pixels per inch
+    PPCM               = PPI / 2.54;                       // calculates pixels per cm
   
-    let screen_width_cm  = display.width * 2.54;
-    let screen_height_cm = display.height * 2.54;
+    // Make your decisions in 'cm', so that targets have the same size for all participants
+    // Below we find out out white space we can have between 2 cm targets
+    let screen_width   = display.width * 2.54;             // screen width
+    let screen_height  = display.height * 2.54;            // screen height
+    let target_size    = 1.2;                              // sets the target size (will be converted to cm when passed to createTargets)
+    let horizontal_gap = screen_width - (target_size+1.1) * GRID_COLUMNS;// empty space in cm across the x-axis (based on 10 targets per row)
+    let vertical_gap   = screen_height - (target_size+0.9) * GRID_ROWS + ((display_size - 15) / 2);  // empty space in cm across the y-axis (based on 8 targets per column)
 
-    
-    let target_size_cm = TARGET_DIAMETER_CM;
+    let block_h_gap = display_size * 0.33;
+    let block_v_gap = display_size * 0.02;
 
-    let horizontal_gap_cm = screen_width_cm - (target_size_cm + H_GAP_EXTRA_CM) * GRID_COLUMNS;
-    let vertical_gap_cm   = screen_height_cm - (target_size_cm + V_GAP_EXTRA_CM) * GRID_ROWS;
+    // Creates and positions the UI targets according to the white space defined above (in cm!)
+    // 80 represent some margins around the display (e.g., for text)
+    createTargets(target_size * PPCM, horizontal_gap * PPCM - 80, vertical_gap * PPCM - 120, block_h_gap * PPCM, block_v_gap * PPCM, PPCM);
 
-    createTargets(
-      target_size_cm,
-      horizontal_gap_cm,
-      vertical_gap_cm,
-      BLOCK_H_GAP_CM,
-      BLOCK_V_GAP_CM,
-      PPCM
-    );
-
+    // Starts drawing targets immediately after we go fullscreen
     draw_targets = true;
   }
 }
